@@ -1,0 +1,28 @@
+int sRed = 200;
+int sBlue = 40;
+int sGreen = 180;
+int blockSize = 8;
+
+void setup(){
+  size(1150,200);
+  background(255);
+  
+}
+
+void draw(){
+  int xBlocks = width/blockSize;
+  int yBlocks = height/blockSize;
+  int xScale = 100/xBlocks;
+  int yScale = 100/yBlocks;
+  
+  for(int x = 0; x <= xBlocks; x++){
+    for(int y = 0; y <= yBlocks; y++){
+      stroke(255);
+      strokeWeight(0.25);
+      noStroke();
+      fill(sRed-((x*0.6)+y),sBlue-(x)*0.7+(y*1),sGreen+(x*0.5)-(y*yScale));
+      rect(x*blockSize,y*blockSize,blockSize,blockSize);
+    }
+  }
+  
+}
