@@ -1,0 +1,265 @@
+Rock[] rocks;
+int numRocks = 2;
+int currentRock = 2;
+int maxRocks = 50;
+
+Star[] stars;
+
+
+Ship myShip1;
+
+float timer = 0;
+float lives = 3;
+float xx1 = 50;
+float yy1 = 50;
+float xx2 = 100;
+float xx3 = 150;
+int score = 0;
+int time = 0;
+int stop = 0;
+float reload = 0;
+int numStars = 900;
+
+void setup(){
+ size(500,700);
+   // Parameters go inside the parentheses when the object is constructed.
+   rocks = new Rock[maxRocks];
+   for (int i = 0; i < maxRocks; i++) {
+     rocks[i] = new Rock(color(80,80,80),random(10,480),10,random(1,2.2));
+   }
+   stars = new Star[numStars];
+   for (int i = 0; i < numStars; i++) {
+     stars[i] = new Star(color(255,255,255),random(1,499),random(1,699),2);
+   }
+   
+  
+  //myRock1 = new Rock(color(80,80,80),random(10,480),10,2); 
+  //myRock2 = new Rock(color(80,80,80),random(10,480),10,1);
+  //myRock3 = new Rock(color(80,80,80),random(10,480),10,1.5);
+  //myRock4 = new Rock(color(80,80,80),random(10,480),10,1.5);
+  //myRock5 = new Rock(color(80,80,80),random(10,480),10,1.5);
+  //myRock6 = new Rock(color(80,80,80),random(10,480),100,1.5);
+  //myRock7 = new Rock(color(80,80,80),random(10,480),100,2.2);
+  myShip1 = new Ship(color(40,40,40),250,600);
+  
+}
+
+
+void draw (){
+  background(10,10,10);
+   for (int i = 0; i < numStars; i++) {
+    stars[i].display();
+  }
+  myShip1.display();
+  for (int i = 0; i < numRocks + score/500; i++) {
+    rocks[i].display();
+  }
+  
+  
+  //myRock1.display();
+  //myRock2.display();
+  //myRock3.display();
+  //myRock4.display();
+  //myRock5.display();
+  //myRock6.display();
+  //myRock7.display();
+  
+  fill(0,0,0);
+  rect(width-500,height-20,width, height);
+  if(reload > 0){
+    reload = reload - 1;
+    fill(200,10,10);
+    rect(width-(500-(100-reload)*5),height-20,width,height);
+  }
+  textSize(22);
+  fill(255,255,255);
+  text(score,410,60);
+  
+ 
+  
+  if(lives>2){
+    noStroke();
+   fill(110,110,110);
+   ellipse(xx3,yy1-5,14,32);
+   triangle(xx3,yy1-11,xx3-19,yy1+6,xx3+19,yy1+6);
+   ellipse(xx3-15,yy1+2,7,17);
+   ellipse(xx3+15,yy1+2,7,17);
+   fill(5,10,210);
+   ellipse(xx3,yy1-1,7,15);
+  }
+  
+  if(lives>1){
+     noStroke();
+   fill(110,110,110);
+   ellipse(xx2,yy1-5,14,32);
+   triangle(xx2,yy1-11,xx2-19,yy1+6,xx2+19,yy1+6);
+   ellipse(xx2-15,yy1+2,7,17);
+   ellipse(xx2+15,yy1+2,7,17);
+   fill(5,10,210);
+   ellipse(xx2,yy1-1,7,15);
+  }
+  
+  if(lives>0){
+     noStroke();
+   fill(110,110,110);
+   ellipse(xx1,yy1-5,14,32);
+   triangle(xx1,yy1-11,xx1-19,yy1+6,xx1+19,yy1+6);
+   ellipse(xx1-15,yy1+2,7,17);
+   ellipse(xx1+15,yy1+2,7,17);
+   fill(5,10,210);
+   ellipse(xx1,yy1-1,7,15);
+  }
+
+ if(lives<0){
+   fill(200,10,10);
+   rect(0,0,500,700);
+   fill(0,0,0);
+   textSize(42);
+   text("Game",190,290);
+   text("Over",200,330);
+   textSize(22);
+   text(score,420,60);
+   stop = 1;
+ }
+ if(stop == 0){
+ score = score +1;
+ time++;
+ }
+}
+//end draw
+
+
+
+class Star {
+  
+  float xx;
+  float yy;
+  float size;
+  color c;
+  
+  Star(color tempC, float tempXx, float tempYy, float tempSize){
+    c = tempC;
+    xx = tempXx;
+    yy = tempYy;
+    size = tempSize;
+  }
+  void display(){
+    fill(c);
+  ellipse(xx,yy,size,size);
+  }
+}
+
+// Even though there are multiple objects, we still only need one class. 
+// No matter how many cookies we make, only one cookie cutter is needed.
+class Rock { 
+  color c;
+  float xpos;
+  float ypos;
+  float xspeed;
+
+  // The Constructor is defined with arguments.
+  Rock(color tempC, float tempXpos, float tempYpos, float tempXspeed) { 
+    c = tempC;
+    xpos = tempXpos;
+    ypos = tempYpos;
+    xspeed = tempXspeed;
+  }
+
+  void display() {
+   //float timer = 0;
+    if((myShip1.xpos-35<=xpos+20) && (myShip1.xpos+35>=xpos-20) && (myShip1.ypos-44<=ypos+20) && (myShip1.ypos+20>=ypos-20)){
+          timer = 150;
+          ypos = 0;
+          xpos = random(20,480);
+          myShip1.explode();
+          lives--;
+     }
+     if(timer>0){
+       timer = timer -1;
+     myShip1.explode();
+     }
+     ypos = ypos + xspeed;
+    if (ypos > height) {
+      ypos = 0;
+      xpos = random(20,480);
+    }
+    fill(c);
+    ellipse(xpos,ypos,50,50);
+    //Rock Hit???????
+    if(keyPressed == true){
+   switch(key){
+     case ' ':
+     if(reload >90){
+       if((myShip1.xpos<=xpos+20) && (myShip1.xpos>=xpos-20)){
+           ypos = 0;
+           xpos = random(20,480);
+           score = score + 100;
+       }
+     }
+     
+     break;
+     case 'x' :
+     myShip1.explode();
+     break;
+   }
+   }
+  }
+}
+
+
+class Ship { 
+  color c;
+  float xpos;
+  float ypos;
+
+  // The Constructor is defined with arguments.
+  Ship(color tempC, float tempXpos, float tempYpos) { 
+    c = tempC;
+    xpos = tempXpos;
+    ypos = tempYpos;
+  }
+
+  void explode() {
+    float flame4 = random(-5,4);
+    float flame5 = random(-20,20);
+    float flame6 = random(-12,12);
+    float flame7 = random(-10,10);
+    fill(2340,80,2);
+    triangle(xpos-60+flame4,ypos+flame7,xpos+44+flame5,ypos-30+flame6,xpos+35+flame7,ypos+30+flame4);
+    triangle(xpos+flame5,ypos-50+flame4,xpos+40+flame7,ypos+30+flame6,xpos-44+flame6,ypos+35+flame7);
+    triangle(xpos-40+flame4,ypos-30+flame7,xpos+25+flame6,ypos-35+flame5,xpos-5+flame4,ypos+50+flame7);
+   
+  }
+  
+  void display() {
+    ypos = mouseY;
+    xpos = mouseX;
+   float flame1 = random(-3,3);
+   float flame2 = random(-5,5);
+   float flame3 = random(-4,4);
+   if(keyPressed == true){
+     switch(key){
+       case ' ':
+       if(reload==0){
+           fill(5,10,210);
+           rect(xpos-1,0,2,ypos);
+           reload = 100;
+       }
+      break;
+   }
+  }
+   noStroke();
+   fill(110,110,110);
+   ellipse(xpos,ypos-10,28,65);
+   triangle(xpos,ypos-22,xpos-39,ypos+12,xpos+39,ypos+12);
+   ellipse(xpos-31,ypos+5,15,35);
+   ellipse(xpos+31,ypos+5,15,35);
+   fill(5,10,210);
+   ellipse(xpos,ypos-3,15,30);
+   fill(234+flame1,80+flame2,2+flame3);
+   ellipse(xpos,ypos+31,16,16);
+   triangle(xpos-8,ypos+31,xpos+8,ypos+31,xpos+flame1,ypos+54+flame2);
+   triangle(xpos-8,ypos+31,xpos+8,ypos+31,xpos+flame2,ypos+54+flame3);
+   triangle(xpos-8,ypos+31,xpos+8,ypos+31,xpos+flame3,ypos+54+flame1);
+  }
+}
