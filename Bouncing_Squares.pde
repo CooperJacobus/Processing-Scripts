@@ -5,8 +5,8 @@ float xVel = 2;
 float yVel = 3;
 
 int boardSize = 500;
-int rectSize = 75;
-int numRects = 5;
+int rectSize = 15;
+int numRects = 50;
 
 float[][] squares = new float[numRects][4];
 
