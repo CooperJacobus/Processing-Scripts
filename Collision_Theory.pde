@@ -13,7 +13,7 @@ void setup(){
   background(255);
   
   for(int i = 0; i < numA; i++){
-    float[] reactant = {20+i*(460/numA), 20, (float)(Math.random()*2)+0.5, (float)(Math.random()*2)+0.5};
+    float[] reactant = {20+i*(460/numA), 20, (float)(Math.random()*1)+0.5, (float)(Math.random()*2)+0.5};
     listA.add(reactant);
   }
   
@@ -31,24 +31,31 @@ void draw(){
     if(listA.get(i)[1] <= radiusA || listA.get(i)[1] >= 500-radiusA) listA.get(i)[3] *= -1;
     
     for(int j = i + 1; j < listA.size(); j++){
-      if(sqrt(pow(listA.get(i)[0]-listA.get(j)[0],2)+pow(listA.get(i)[1]-listA.get(j)[1],2)) <= 2*radiusA){
+      boolean collide = false;
+      while(sqrt(pow(listA.get(i)[0]-listA.get(j)[0],2)+pow(listA.get(i)[1]-listA.get(j)[1],2)) <= 2*radiusA){
+          listA.get(i)[0] += (listA.get(i)[0]-listA.get(j)[0])/10;
+          listA.get(i)[1] += (listA.get(i)[1]-listA.get(j)[1])/10;
+          listA.get(j)[0] += (listA.get(j)[0]-listA.get(i)[0])/10;
+          listA.get(j)[1] += (listA.get(j)[1]-listA.get(i)[1])/10;
+          //collide = true;
+      }
+        
+      if(collide){
         float ixVel = listA.get(i)[0];
         float iyVel = listA.get(i)[1];
         float jxVel = listA.get(j)[0];
         float jyVel = listA.get(j)[1];
         
-        listA.get(i)[2] = ixVel + (abs(listA.get(i)[0]-listA.get(j)[0])/(2*radiusA)) * sqrt(pow(jxVel,2)+pow(jyVel,2));
-        listA.get(i)[3] = iyVel + (abs(listA.get(i)[1]-listA.get(j)[1])/(2*radiusA)) * sqrt(pow(jxVel,2)+pow(jyVel,2));
+        //listA.get(i)[2] = (abs(listA.get(i)[0]-listA.get(j)[0])/(2*radiusA)) * sqrt(pow(jxVel,2)+pow(jyVel,2));
+        //listA.get(i)[3] = (abs(listA.get(i)[1]-listA.get(j)[1])/(2*radiusA)) * sqrt(pow(jxVel,2)+pow(jyVel,2));
+        listA.get(i)[2] = 0;
+        listA.get(i)[3] = 0;
         
-        listA.get(j)[2] = jxVel + (abs(listA.get(i)[0]-listA.get(j)[0])/(2*radiusA)) * sqrt(pow(ixVel,2)+pow(iyVel,2));
-        listA.get(j)[3] = jyVel + (abs(listA.get(i)[1]-listA.get(j)[1])/(2*radiusA)) * sqrt(pow(ixVel,2)+pow(iyVel,2));
-
-        while(sqrt(pow(listA.get(i)[0]-listA.get(j)[0],2)+pow(listA.get(i)[1]-listA.get(j)[1],2)) <= 2*radiusA){
-          listA.get(i)[0] += (listA.get(i)[0]-listA.get(j)[0])/10;
-          listA.get(i)[1] += (listA.get(i)[1]-listA.get(j)[1])/10;
-          listA.get(j)[0] += (listA.get(j)[0]-listA.get(i)[0])/10;
-          listA.get(j)[1] += (listA.get(j)[1]-listA.get(i)[1])/10;
-        }
+        listA.get(j)[2] = (abs(listA.get(i)[0]-listA.get(j)[0])/(2*radiusA)) * sqrt(pow(ixVel,2)+pow(iyVel,2));
+        listA.get(j)[3] = (abs(listA.get(i)[1]-listA.get(j)[1])/(2*radiusA)) * sqrt(pow(ixVel,2)+pow(iyVel,2));  
+        //listA.get(j)[2] = ixVel;
+        //listA.get(j)[3] = iyVel;
+        collide = false;
       }
     }
     
